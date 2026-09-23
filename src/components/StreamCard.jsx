@@ -1,48 +1,35 @@
+import { useState } from 'react'
 import VideoPlayer from './VideoPlayer'
 
-export default function StreamCard({ stream, isFullscreen = false }) {
+export default function StreamCard({ stream, isFullscreen = false, onSelect }) {
+  const [imageFailed, setImageFailed] = useState(false)
+  const date = new Date(stream.date)
+
   if (isFullscreen) {
     return (
-      <div className="space-y-4">
-        <VideoPlayer url={stream.cloudinaryUrl} />
-        <div className="space-y-2">
-          <h2 className="rnr-text text-4xl font-black text-white">
-            Episode {stream.episode}
-          </h2>
-          <p className="text-xl text-rnr-red font-bold">{stream.artist}</p>
-          <p className="text-gray-400">{new Date(stream.date).toLocaleDateString()}</p>
+      <article className="watch-session">
+        <div className="watch-player"><VideoPlayer url={stream.cloudinaryUrl} /></div>
+        <div className="watch-meta">
+          <span>EP.{String(stream.episode).padStart(2, '0')}</span>
+          <h1>{stream.artist}</h1>
+          <time>{date.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}</time>
         </div>
-      </div>
+      </article>
     )
   }
 
   return (
-    <div className="bg-rnr-red relative overflow-hidden group cursor-pointer">
-      <div className="relative aspect-video overflow-hidden bg-black">
-        <img
-          src={stream.thumbnail}
-          alt={`Episode ${stream.episode}`}
-          className="w-full h-full object-cover halftone group-hover:scale-105 transition-transform duration-300"
-        />
-        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+    <button className="session-card" onClick={() => onSelect?.(stream)} aria-label={'Play episode ' + stream.episode + ', ' + stream.artist}>
+      <div className={'session-image ' + (imageFailed ? 'image-fallback' : '')}>
+        {!imageFailed && <img src={stream.thumbnail} alt="" loading="lazy" onError={() => setImageFailed(true)} />}
+        <div className="fallback-type" aria-hidden="true"><span>RNR</span><span>{String(stream.episode).padStart(2, '0')}</span></div>
+        <span className="episode-number">EP.{String(stream.episode).padStart(2, '0')}</span>
+        <span className="card-play">↗</span>
       </div>
-
-      <div className="episode-badge">
-        Episode {stream.episode}
+      <div className="session-info">
+        <h3>{stream.artist}</h3>
+        <div><time>{date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</time><span>Session</span></div>
       </div>
-
-      <div className="p-6 space-y-3">
-        <h3 className="rnr-text text-3xl font-black text-white leading-tight">
-          {stream.artist.toUpperCase()}
-        </h3>
-        <p className="text-white/80 text-sm font-medium">
-          {new Date(stream.date).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })}
-        </p>
-      </div>
-    </div>
+    </button>
   )
 }
