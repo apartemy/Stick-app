@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #0a0a0a;
+  color: #fff;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+  background: #0a0a0a;
+}
+
+.halftone {
+  filter: grayscale(100%) contrast(1.2);
+}
+
+.rnr-text {
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.episode-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #0a0a0a;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-weight: bold;
+  font-size: 0.875rem;
+  z-index: 10;
+}
+
