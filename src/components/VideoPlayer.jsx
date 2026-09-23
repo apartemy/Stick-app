@@ -8,40 +8,19 @@ export default function VideoPlayer({ url }) {
 
   useEffect(() => {
     if (!videoRef.current) return
-
     playerRef.current = new Plyr(videoRef.current, {
-      controls: [
-        'play-large',
-        'play',
-        'progress',
-        'current-time',
-        'duration',
-        'mute',
-        'volume',
-        'captions',
-        'pip',
-        'fullscreen'
-      ],
-      settings: ['quality', 'speed', 'loop'],
+      controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'],
+      settings: ['speed', 'loop'],
+      ratio: '16:9',
     })
-
-    return () => {
-      if (playerRef.current) {
-        playerRef.current.destroy()
-      }
-    }
-  }, [])
+    return () => playerRef.current?.destroy()
+  }, [url])
 
   return (
-    <div className="aspect-video bg-black rounded-lg overflow-hidden">
-      <video
-        ref={videoRef}
-        controls
-        crossOrigin="anonymous"
-        className="w-full h-full"
-      >
+    <div className="video-shell">
+      <video ref={videoRef} controls playsInline crossOrigin="anonymous">
         <source src={url} type="video/mp4" />
-        Your browser doesn't support HTML5 video.
+        Your browser does not support HTML5 video.
       </video>
     </div>
   )
